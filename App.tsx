@@ -1,13 +1,6 @@
 import React from 'react';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {NovaScotiaConciergeShell} from './NovaScotiaConcierge/NovaScotiaConciergeApp/NovaScotiaConciergeShell';
+import AppNavigator from './src/nav/AppNavigator';
 
-function App(): React.JSX.Element {
-  return (
-    <SafeAreaProvider>
-      <NovaScotiaConciergeShell />
-    </SafeAreaProvider>
-  );
+export default function App() {
+  return <AppNavigator />;
 }
-
-export default App;

@@ -4,17 +4,17 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: Nova Scotia Concierge
+      app_store_connect: Nova Scotia ConciergeAPI Key
     environment:
       xcode: '26.0'
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.asdnjlasdk.adsjnklas
+        bundle_identifier: com.dfkdff.dkdkdklaprf
       vars:
-        BUNDLE_ID: com.asdnjlasdk.adsjnklas
+        BUNDLE_ID: com.dfkdff.dkdkdklaprf
         XCODE_WORKSPACE: NovaScotiaConcierge.xcworkspace
         XCODE_SCHEME: NovaScotiaConcierge
-        APP_STORE_APPLE_ID: 6778322719
+        APP_STORE_APPLE_ID: 6779140942
     scripts:
       - name: Install npm dependencies
         script: |
