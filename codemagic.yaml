@@ -4,17 +4,17 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     integrations:
-      app_store_connect: Nova Scotia ConciergeAPI Key
+      app_store_connect: ElizaMerrittAPIKey
     environment:
       xcode: '26.0'
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: com.dfkdff.dkdkdklaprf
+        bundle_identifier: com.sdfkjsad.novascotiaconcierge
       vars:
-        BUNDLE_ID: com.dfkdff.dkdkdklaprf
-        XCODE_WORKSPACE: NovaScotiaConcierge.xcworkspace
-        XCODE_SCHEME: NovaScotiaConcierge
-        APP_STORE_APPLE_ID: 6779140942
+        BUNDLE_ID: com.sdfkjsad.novascotiaconcierge
+        XCODE_WORKSPACE: NovaScotiaConciergeCasino.xcworkspace
+        XCODE_SCHEME: NovaScotiaConciergeCasino
+        APP_STORE_APPLE_ID: 6779615622
     scripts:
       - name: Install npm dependencies
         script: |
@@ -37,7 +37,7 @@ workflows:
           agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
       - name: Set Info.plist values
         script: |
-          PLIST=$CM_BUILD_DIR/ios/NovaScotiaConcierge/Info.plist
+          PLIST=$CM_BUILD_DIR/ios/NovaScotiaConciergeCasino/Info.plist
           PLIST_BUDDY=/usr/libexec/PlistBuddy
           $PLIST_BUDDY -c "Add :ITSAppUsesNonExemptEncryption bool false" $PLIST || \
           $PLIST_BUDDY -c "Set :ITSAppUsesNonExemptEncryption false" $PLIST

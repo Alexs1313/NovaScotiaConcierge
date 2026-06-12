@@ -1,12 +1,12 @@
 import {useEffect, useState} from 'react';
-import {localData} from '../local/localData';
+import {localData} from '../storage/localData';
 
 export function useGuestPassCode() {
-  const [code, setCode] = useState('NSC-2048');
+  const [code, setCode] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    localData.getPassCode().then(value => {
+    localData.refreshPassCode().then(value => {
       setCode(value);
       setLoading(false);
     });

@@ -1,57 +1,73 @@
-import React, {createContext, useCallback, useContext, useMemo, useState} from 'react';
-import {getDiningItemById} from '../data/diningMenu';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
+import {getDiningItemById} from '../content/diningMenu';
 import type {DiningItem} from '../types';
 
-export type CartLine = {item: DiningItem; quantity: number};
+export type CartLine = {menuItem: DiningItem; quantity: number};
 
-type Value = {
+type DiningCartValue = {
   cart: Record<string, number>;
-  lines: CartLine[];
+  cartLines: CartLine[];
   itemCount: number;
   total: number;
   addItem: (id: string) => void;
   clearCart: () => void;
 };
 
-const Ctx = createContext<Value | null>(null);
+const DiningCartContext = createContext<DiningCartValue | null>(null);
 
 export function DiningCartProvider({children}: {children: React.ReactNode}) {
   const [cart, setCart] = useState<Record<string, number>>({});
 
   const addItem = useCallback(
-    (id: string) => setCart(p => ({...p, [id]: (p[id] ?? 0) + 1})),
+    (id: string) =>
+      setCart(previousCart => ({
+        ...previousCart,
+        [id]: (previousCart[id] ?? 0) + 1,
+      })),
     [],
   );
   const clearCart = useCallback(() => setCart({}), []);
-  const lines = useMemo(
+  const cartLines = useMemo(
     () =>
       Object.entries(cart)
         .map(([id, quantity]) => {
-          const item = getDiningItemById(id);
-          return item && quantity > 0 ? {item, quantity} : null;
+          const menuItem = getDiningItemById(id);
+          return menuItem && quantity > 0 ? {menuItem, quantity} : null;
         })
-        .filter((x): x is CartLine => x !== null),
+        .filter((line): line is CartLine => line !== null),
     [cart],
   );
   const itemCount = useMemo(
-    () => lines.reduce((s, l) => s + l.quantity, 0),
-    [lines],
+    () => cartLines.reduce((sum, line) => sum + line.quantity, 0),
+    [cartLines],
   );
   const total = useMemo(
-    () => lines.reduce((s, l) => s + l.item.price * l.quantity, 0),
-    [lines],
+    () =>
+      cartLines.reduce(
+        (sum, line) => sum + line.menuItem.price * line.quantity,
+        0,
+      ),
+    [cartLines],
   );
   const value = useMemo(
-    () => ({cart, lines, itemCount, total, addItem, clearCart}),
-    [cart, lines, itemCount, total, addItem, clearCart],
+    () => ({cart, cartLines, itemCount, total, addItem, clearCart}),
+    [cart, cartLines, itemCount, total, addItem, clearCart],
   );
-  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+  return (
+    <DiningCartContext.Provider value={value}>{children}</DiningCartContext.Provider>
+  );
 }
 
 export function useDiningCart() {
-  const ctx = useContext(Ctx);
-  if (!ctx) {
-    throw new Error('useDiningCart requires DiningCartProvider');
+  const diningCart = useContext(DiningCartContext);
+  if (!diningCart) {
+    throw new Error('useDiningCart must be used within DiningCartProvider');
   }
-  return ctx;
+  return diningCart;
 }

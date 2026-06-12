@@ -1,22 +1,18 @@
 import React, {useMemo, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import type {StackScreenProps} from '@react-navigation/stack';
-import {Background} from '../../components/Background';
-import {EventCard} from '../../components/EventCard';
-import {WeekDayPicker} from '../../components/WeekDayPicker';
-import {
-  EVENTS,
-  getEventsForDay,
-} from '../../data/events';
-import type {EventsStackParamList} from '../../nav/types';
+import {Background} from '../../components/shared/Background';
+import {EventCard} from '../../components/events/EventCard';
+import {WeekDayPicker} from '../../components/shared/WeekDayPicker';
+import {EVENTS, getEventsForDay} from '../../content/events';
 import {colors} from '../../constants/theme';
 
-type Props = StackScreenProps<EventsStackParamList, 'EventsList'>;
+type EventsScreenProps = {
+  onOpenEvent: (eventId: string) => void;
+};
 
-export function EventsScreen({navigation}: Props) {
+export function EventsScreen({onOpenEvent}: EventsScreenProps) {
   const insets = useSafeAreaInsets();
-
   const [selectedDay, setSelectedDay] = useState(5);
 
   const daysWithEvents = useMemo(
@@ -27,11 +23,7 @@ export function EventsScreen({navigation}: Props) {
 
   return (
     <Background>
-      <View
-        style={[
-          styles.topBlock,
-          {paddingTop: insets.top + 16},
-        ]}>
+      <View style={[styles.EventsCornice, {paddingTop: insets.top + 16}]}>
         <View
           style={{
             borderBottomWidth: 1,
@@ -39,13 +31,13 @@ export function EventsScreen({navigation}: Props) {
             paddingBottom: 15,
             paddingHorizontal: 20,
           }}>
-          <Text style={styles.heading}>Resort Events</Text>
-          <Text style={styles.subheading}>
+          <Text style={styles.EventsCorniceFiligree}>Resort Events</Text>
+          <Text style={styles.EventsCorniceEmblem}>
             Discover events you can visit during your stay.
           </Text>
         </View>
         <View style={{paddingHorizontal: 20}}>
-          <Text style={styles.sectionLabel}>This Week</Text>
+          <Text style={styles.EventsSectionEmblem}>This Week</Text>
           <WeekDayPicker
             selectedDay={selectedDay}
             daysWithEvents={daysWithEvents}
@@ -53,17 +45,17 @@ export function EventsScreen({navigation}: Props) {
           />
         </View>
       </View>
-      <View style={styles.listWrap}>
+      <View style={styles.EventsListTapestry}>
         {events.length === 0 ? (
-          <Text style={styles.emptyCopy}>No events scheduled for this day.</Text>
+          <Text style={styles.EventsEmptyVellum}>
+            No events scheduled for this day.
+          </Text>
         ) : (
-          events.map(item => (
+          events.map(event => (
             <EventCard
-              key={item.id}
-              event={item}
-              onPress={() =>
-                navigation.navigate('EventDetails', {eventId: item.id})
-              }
+              key={event.id}
+              event={event}
+              onPress={() => onOpenEvent(event.id)}
             />
           ))
         )}
@@ -73,22 +65,22 @@ export function EventsScreen({navigation}: Props) {
 }
 
 const styles = StyleSheet.create({
-  topBlock: {
+  EventsCornice: {
     paddingBottom: 12,
     gap: 10,
   },
-  heading: {
+  EventsCorniceFiligree: {
     color: colors.cream,
     fontSize: 26,
     fontWeight: '700',
     fontFamily: 'Georgia',
   },
-  subheading: {
+  EventsCorniceEmblem: {
     color: colors.textMuted,
     fontSize: 14,
     lineHeight: 20,
   },
-  sectionLabel: {
+  EventsSectionEmblem: {
     color: colors.gold,
     fontSize: 14,
     fontWeight: '600',
@@ -96,12 +88,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 10,
   },
-  listWrap: {
+  EventsListTapestry: {
     paddingHorizontal: 20,
     paddingBottom: 24,
     gap: 14,
   },
-  emptyCopy: {
+  EventsEmptyVellum: {
     color: colors.textMuted,
     fontSize: 14,
     textAlign: 'center',
